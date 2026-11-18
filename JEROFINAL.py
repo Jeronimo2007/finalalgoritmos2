@@ -1,0 +1,94 @@
+
+import random
+
+# punto 1
+def funcionnn1(x):
+    x0 = x[0]
+    x1 = x[1]
+    resultado = (x0**2) * (x1**2)- 5.44 * (x0**2) * x1 + 8.39 * (x0**2)- 6.28 * x0 * (x1**2)+ 34.16 * x0 * x1 - 52.7 * x0+ 10.87 * (x1**2)- 59.09 * x1 + 91.17
+    return resultado
+
+print("resultado punto 1:", funcionnn1([0, 0]), funcionnn1([2, 1]))
+
+# punto 2
+def createpobla(tamano, minimo, maximo):
+    poblacion = []
+    for i in range(tamano):
+        x0 = random.uniform(minimo, maximo)
+        x1 = random.uniform(minimo, maximo)
+        poblacion.append([x0, x1])
+    return poblacion
+
+poblacion_prueba = createpobla(5, -4, 4)
+print("resultado punto 2:", poblacion_prueba)
+
+
+# punto 3
+def evaluar_poblacion(funcion, poblacion):
+    resultados = []
+    for i in range(len(poblacion)):
+        valor = funcion(poblacion[i])
+        resultados.append(valor)
+    return resultados
+
+evaluacion_prueba = evaluar_poblacion(funcionnn1, poblacion_prueba)
+print("resultado punto 3:", evaluacion_prueba)
+
+# punto 4
+def actmejor(x, Pbest, Gbest):
+    fx = evaluar_poblacion(funcionnn1, x)
+    fPbest = evaluar_poblacion(funcionnn1, Pbest)
+    fGbest = funcionnn1(Gbest)
+
+    for i in range(len(x)):
+        if fx[i] < fPbest[i]:
+            Pbest[i] = [x[i][0], x[i][1]]
+
+    for i in range(len(x)):
+        if fx[i] < fGbest:
+            Gbest = [x[i][0], x[i][1]]
+            fGbest = fx[i]
+
+    return Gbest, Pbest
+
+pbest_prueba = []
+for i in range(len(poblacion_prueba)):
+    pbest_prueba.append([poblacion_prueba[i][0], poblacion_prueba[i][1]])
+gbest_prueba = [poblacion_prueba[0][0], poblacion_prueba[0][1]]
+gbest_prueba, pbest_prueba = actmejor(poblacion_prueba, pbest_prueba, gbest_prueba)
+print("resulado punto 4:", gbest_prueba, pbest_prueba)
+
+
+# punto 5
+def actveloyposi(X, Pbest, Vt, Gbest, Cp=1.5, Cg=1.2, W=0.8):
+    for i in range(len(X)):
+        for j in range(2):
+            r1 = random.random()
+            r2 = random.random()
+            Vt[i][j] = W * Vt[i][j] + Cp * r1 * (Pbest[i][j] - X[i][j]) + Cg * r2 * (Gbest[j] - X[i][j])
+            X[i][j] = X[i][j] + Vt[i][j]
+    return X, Vt
+
+v_prueba = createpobla(5, -1, 1)
+x_act, v_act = actveloyposi(poblacion_prueba, pbest_prueba, v_prueba, gbest_prueba, 1.5, 1.2, 0.8)
+print("resutado punto 5:", x_act, v_act)
+
+
+# punto 6
+X = createpobla(50, -4, 4)
+V = createpobla(50, -1, 1)
+
+fitness = evaluar_poblacion(funcionnn1, X)
+
+Pbest = []
+for i in range(len(X)):
+    Pbest.append([X[i][0], X[i][1]])
+
+Gbest = [X[0][0], X[0][1]]
+Gbest, Pbest = actmejor(X, Pbest, Gbest)
+
+for iteracion in range(50):
+    X, V = actveloyposi(X, Pbest, V, Gbest, 1.5, 1.1, 0.8)
+    Gbest, Pbest = actmejor(X, Pbest, Gbest)
+
+print("resultado punto 6:", Gbest, funcionnn1(Gbest))
