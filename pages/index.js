@@ -1,26 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Final</title>
-</head>
-<body>
-    <a href="finajero.zip" download="finajero.zip">
-        <button>descargar</button>
-    </a>
+import { useState } from "react";
 
-    <br><br>
-
-    <input type="password" id="pass" placeholder="contrasena" oninput="verificar()">
-    <button onclick="verificar()">entrar</button>
-
-    <br><br>
-
-    <button id="btnListo" style="display: none;" onclick="copiar()">listo</button>
-
-    <script>
-        const codigo = `
-import random
+const codigo = `import random
 
 # punto 1
 def funcionnn1(x):
@@ -114,18 +94,33 @@ for iteracion in range(50):
 
 print("resultado punto 6:", Gbest, funcionnn1(Gbest))`;
 
-        function verificar() {
-            const val = document.getElementById("pass").value;
-            if (val === "majo") {
-                document.getElementById("btnListo").style.display = "inline-block";
-            } else {
-                document.getElementById("btnListo").style.display = "none";
-            }
-        }
+export default function Home() {
+  const [pass, setPass] = useState("");
 
-        function copiar() {
-            navigator.clipboard.writeText(codigo);
-        }
-    </script>
-</body>
-</html>
+  const copiar = () => {
+    navigator.clipboard.writeText(codigo);
+  };
+
+  return (
+    <div>
+      <a href="/finajero.zip" download="finajero.zip">
+        <button>descargar</button>
+      </a>
+
+      <br />
+      <br />
+
+      <input
+        type="password"
+        placeholder="contrasena"
+        value={pass}
+        onChange={(e) => setPass(e.target.value)}
+      />
+
+      <br />
+      <br />
+
+      {pass === "majo" && <button onClick={copiar}>listo</button>}
+    </div>
+  );
+}
