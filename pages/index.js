@@ -110,6 +110,13 @@ export default function Home() {
       <br />
       <br />
 
+      <a href="/JEROFINAL.py" download="JEROFINAL.py">
+        <button>descargar2</button>
+      </a>
+
+      <br />
+      <br />
+
       <input
         type="password"
         placeholder="contrasena"
